@@ -23,5 +23,4 @@ const excuteSqlScript = async (scriptPath) => {
   }
 }
 
-
 module.exports = { pool, excuteSqlScript };

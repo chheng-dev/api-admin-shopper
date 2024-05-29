@@ -35,6 +35,9 @@ CREATE TABLE IF NOT EXISTS products (
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+ALTER TABLE products ADD COLUMN slug VARCHAR(255);
+
+
 -- Create users table
 
 CREATE TABLE IF NOT EXISTS users (
@@ -82,10 +85,3 @@ CREATE TABLE IF NOT EXISTS user_roles (
   PRIMARY KEY (user_id, role_id)
 );
 
--- Corrected admin_data table
-
--- CREATE TABLE admin_data (
---     id SERIAL PRIMARY KEY,
---     name VARCHAR(100),
---     token VARCHAR(255) UNIQUE
--- );
