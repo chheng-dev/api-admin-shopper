@@ -1,45 +1,39 @@
-const UserModel = require('../models/UserModel');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
-
+const UserModel = require('../models/User');
 
 class AuthController {
-  static async signup(req, res){
-    const {firstname, lastname, email, password, confirm_password} = req.body;
-    try {
-      // const existingUser = await UserModel.getUserByEmail(email);
-      // if(existingUser) {
-      //     return res.status(400).json({ message: 'User already exists'});
-      // }
-
-      // const hashedPassword = bcrypt.hashSync(password, 10);
-      // const hashedConfirmPassword = bcrypt.hashSync(confirm_password, 10);
-
-      // await UserModel.createUser(firstname, lastname, email, hashedPassword, hashedConfirmPassword);
-      // res.status(201).json({ message: 'User creatd successfully'});
-      const userId = await UserModel.createUser(firstname, lastname, email, password, confirm_password);
-      res.status(201).json({ userId });
-    } catch(err){
-      console.error('Sign-in error:', err);
-      res.status(500).json({ message: "Internal Server Error"});
+  static async register(req, res){
+    const {email, password} = req.body;
+    
+    try{
+      const hashedPassword = await bcrypt.hash(password, 10);
+      const user = await UserModel.createUser(email, hashedPassword);
+      res.status(201).json(user);
+    } catch (err){
+      res.status(500).json({ error: err.message });
     }
   }
 
-  static async signin(req, res){
-    const secretKey = crypto.randomBytes(32).toString('hex');
-    const { email, password } = req.body;
+  static async login (req, res) {
+    const {email, password} = req.body;
     try {
-      const user = await UserModel.getUserByEmail(email);
-      if(!user || !(await bcrypt.compare(password, user.password))) {
-        return res.status(401).json({ message: 'Invalid email or password' });
+      const user = await UserModel.findUserbyEmail(email);
+      if(!user) {
+        return res.status(400).json({ error: 'Invalid credentials'});
       }
 
-      const token = jwt.sign({ userId: user.userId }, secretKey,{ expiresIn: '1h' });
-      res.json({ token });
-    } catch(err) {
-      console.log('Sign-in error:', err);
-      res.status(500).json({ message: 'Internal Server Error' });
+      const isMatch = await bcrypt.compare(password, user.password);
+
+      if(!isMatch) {
+        return res.status(400).json({ error: 'Invalid credentials'});
+      }
+
+      const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {expiresIn: '1h'});
+      res.send({ token });
+    } catch (err){
+      res.status(500).json({ error: err.message });
     }
   }
 }

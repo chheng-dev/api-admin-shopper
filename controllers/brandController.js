@@ -1,7 +1,4 @@
 const brandModel = require('../models/brandModel');
-const multer = require('multer');
-const { pool } = require('../config/db');
-
 
 const createBrand = async (req, res) => {
   const basePath = `${req.protocol}://${req.get('host')}/public/upload/`;

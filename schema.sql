@@ -84,8 +84,8 @@ CREATE TABLE IF NOT EXISTS user_roles (
 
 -- Corrected admin_data table
 
-CREATE TABLE admin_data (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(100),
-    token VARCHAR(255) UNIQUE
-);
+-- CREATE TABLE admin_data (
+--     id SERIAL PRIMARY KEY,
+--     name VARCHAR(100),
+--     token VARCHAR(255) UNIQUE
+-- );

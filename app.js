@@ -8,8 +8,7 @@ const BrandRoute = require('./routes/brandRoutes');
 const CategoryRoute = require('./routes/categoryRoutes');
 const ProductRoute = require('./routes/productRoutes');
 const AuthRoute = require('./routes/authRoutes');
-const AdminDataController = require('./controllers/AdminDataController');
-
+const UserRoute = require('./routes/UserRoutes')
 
 const app = express();
 const port = process.env.PORT || 3002;
@@ -24,8 +23,7 @@ app.use('/api', CategoryRoute);
 app.use('/api', ProductRoute);
 
 app.use('/auth', AuthRoute);
-app.get ('/admin/data', AdminDataController.fectAdminData);
-
+app.use('/api/user', UserRoute);
 
 
 // Serve uploaded image
